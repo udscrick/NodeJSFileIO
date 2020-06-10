@@ -1,4 +1,5 @@
 const fs = require('fs')
+const chalk = require('chalk')
 
 const getNotes = () =>{
     return "\nYour notes..."
@@ -7,7 +8,7 @@ const getNotes = () =>{
 const addNotes = (title,body) =>{
    
     let notes = loadNotes()
-    console.log("In add notes: ",notes)
+    // console.log("In add notes: ",notes)
     let note = [];
     note  = notes.filter(ele=>ele.title==title)
     if(note.length==0){
@@ -15,11 +16,12 @@ const addNotes = (title,body) =>{
             title,
             body
         })
-        console.log("In add notes: ",JSON.stringify(notes))
+        
         saveNote(notes)
+        console.log(chalk.green.inverse('Note added successfully!'))
     }
     else{
-        console.log("Note already exists")
+        console.log(chalk.red.inverse("Note already exists"))
     }
    
    
@@ -30,17 +32,48 @@ const saveNote = (notes) =>{
         'notes.json',
         JSON.stringify(notes)
     )
+    
 }
 
 const removeNotes = (title) =>{
     let notes = loadNotes()
     let passval = notes.filter((ele)=>ele.title!=title)
-    console.log("Notes is: ",passval)
+    if(notes.length>passval.length)
+        console.log(chalk.blue.inverse("Note '"+title+"' deleted successfully!"))
+    else
+        console.log(chalk.red.inverse("Note does not exist"))
     saveNote(passval)
 }
 
 const listNotes = () =>{
     let notes = loadNotes()
+    if(notes.length>0){
+        console.log(chalk.red("Notes are: "))
+        count = 0;
+        notes.forEach(element => {
+            console.log(chalk.green(element.title))
+        });
+    }
+    else{
+        console.log(chalk.red.inverse("No notes found"))
+    }
+}
+
+const readNotes = (title) =>{
+    let notes = loadNotes()
+  
+    let noteToRead = notes.find(ele=>ele.title==title)
+    console.log("Title is: ",noteToRead)
+    if(noteToRead)
+    {
+        console.log(chalk.yellow.inverse("Selected note info: "))
+        console.log(chalk.inverse("Title: ",noteToRead.title))
+        console.log(chalk.inverse("Description: ",noteToRead.body))
+    }
+    else{
+        console.log(chalk.red.inverse("No notes found"))
+    }
+   
 }
 
 const loadNotes = () =>{
@@ -61,5 +94,7 @@ const loadNotes = () =>{
 module.exports = {
     getNotes,
     addNotes,
-    removeNotes
+    removeNotes,
+    listNotes,
+    readNotes
 }

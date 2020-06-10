@@ -5,7 +5,7 @@ const notes = require('./notes')
 // var nameImported = require('./utils.js')
 
 
-// const chalk = require('chalk')
+const chalk = require('chalk')
 
 
 
@@ -66,7 +66,7 @@ yargs.command({
             type:'string'
         }
     },
-    handler: function(argv){
+    handler: (argv)=>{
       notes.addNotes(argv.title,argv.body)
     }
 })
@@ -88,7 +88,7 @@ yargs.command({
     },
     handler: (argv) =>{
         notes.removeNotes(argv.title)
-        console.log("In remove")
+        
     }
 })
 // .parse()
@@ -96,8 +96,15 @@ yargs.command({
 yargs.command({
     command:'read',
     describe:'Reading a note',
+    builder:{
+        title:{
+            describe:'Note title',
+            demandOption:true,
+            type:'string'
+        }
+    },
     handler:(argv)=>{
-        console.log("Reading a note")
+        notes.readNotes(argv.title)
     }
 })
 // .parse()
@@ -106,7 +113,8 @@ yargs.command({
     command:'list',
     describe:'List the notes',
     handler:(argv)=>{
-        console.log("List the notes")
+        notes.listNotes()
+        // console.log("List the notes")
     }
 
 })
